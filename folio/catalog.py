@@ -1,5 +1,6 @@
 """Application-facing catalog API."""
 from .models import Document, Hit, Query
+from .refresh import refresh
 from .search import ranked
 from .store import Store
 
@@ -31,3 +32,7 @@ class Catalog:
 
     def search(self, query: Query) -> list[Hit]:
         return ranked(self._store.documents(query.collection), query)
+
+    def refresh(self, sources, loader, *, workers=4):
+        """Fetch source records concurrently and write them to this catalog."""
+        return refresh(self, sources, loader, workers)
