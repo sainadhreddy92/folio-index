@@ -1,5 +1,6 @@
 """Application-facing catalog API."""
 from .models import Document, Hit, Query
+from .facets import summarize
 from .search import ranked
 from .store import Store
 
@@ -31,3 +32,7 @@ class Catalog:
 
     def search(self, query: Query) -> list[Hit]:
         return ranked(self._store.documents(query.collection), query)
+
+    def search_summary(self, query, *, hit_limit=10, tag_limit=10):
+        """Return ranked hits and tag counts for all matching documents."""
+        return summarize(self.search(query), hit_limit, tag_limit)
