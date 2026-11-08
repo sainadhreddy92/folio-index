@@ -1,5 +1,6 @@
 """Application-facing catalog API."""
 from .models import Document, Hit, Query
+from .importer import import_archive
 from .search import ranked
 from .store import Store
 
@@ -31,3 +32,7 @@ class Catalog:
 
     def search(self, query: Query) -> list[Hit]:
         return ranked(self._store.documents(query.collection), query)
+
+    def import_lines(self, collection, lines, *, batch_size=100):
+        """Import a collection archive and report insertions and replacements."""
+        return import_archive(self._store, collection, lines, batch_size)
