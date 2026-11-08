@@ -1,5 +1,6 @@
 """Application-facing catalog API."""
 from .models import Document, Hit, Query
+from .paging import paginate
 from .search import ranked
 from .store import Store
 
@@ -31,3 +32,7 @@ class Catalog:
 
     def search(self, query: Query) -> list[Hit]:
         return ranked(self._store.documents(query.collection), query)
+
+    def search_page(self, query: Query, size=20, cursor=None):
+        """Return a page of hits and an opaque cursor for the next request."""
+        return paginate(self.search(query), query, size, cursor)
