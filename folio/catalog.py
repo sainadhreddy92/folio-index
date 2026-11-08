@@ -33,6 +33,6 @@ class Catalog:
     def search(self, query: Query) -> list[Hit]:
         return ranked(self._store.documents(query.collection), query)
 
-    def refresh(self, sources, loader, *, workers=4):
-        """Fetch source records concurrently and write them to this catalog."""
-        return refresh(self, sources, loader, workers)
+    def refresh(self, sources, loader, *, workers=4, batch_size=100):
+        """Fetch source records concurrently and save them in batches."""
+        return refresh(self, sources, loader, workers, batch_size)
